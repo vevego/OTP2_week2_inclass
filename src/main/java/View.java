@@ -10,6 +10,7 @@ public class View extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
+        stage.setTitle("Veera Ruotsalainen");
         stage.setScene(scene);
         stage.show();
     }
