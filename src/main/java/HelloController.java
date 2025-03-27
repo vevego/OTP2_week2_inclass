@@ -6,6 +6,7 @@ import javafx.scene.layout.Pane;
 
 import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 
@@ -25,35 +26,32 @@ public class HelloController {
     @FXML
     private Button calculateButton ,englishButton, frenchButton, japaneseButton, farsiButton;
 
-    public void setLanguage(String language) {
-        switch (language) {
-            case "en":
-                locale = new Locale("en", "US");
-                break;
-            case "fr":
-                locale = new Locale("fr", "FR");
-                break;
-            case "ja":
-                locale = new Locale("ja", "JP");
-                break;
-            case "fa":
-                locale = new Locale("fa", "IR");
-                break;
-            default:
-                locale = new Locale("en", "US");
+    public void setLanguage(Locale locale) {
+        totalConsumptionLabel.setText("");
+
+        try
+        {
+            rb = ResourceBundle.getBundle("texts", locale);
+            distanceLabel.setText(rb.getString("distance"));
+            fuelLabel.setText(rb.getString("fuel"));
+            resultsLabel.setText(rb.getString("result"));
+            languageLabel.setText(rb.getString("language"));
+            calculateButton.setText(rb.getString("calculate"));
+        } catch (MissingResourceException e) {
+            e.printStackTrace();
+            totalConsumptionLabel.setText("Error loading resources");
         }
-        rb = ResourceBundle.getBundle("texts", locale);
-        distanceLabel.setText(rb.getString("distance"));
-        fuelLabel.setText(rb.getString("fuel"));
-        resultsLabel.setText(rb.getString("result"));
-        languageLabel.setText(rb.getString("language"));
-        calculateButton.setText(rb.getString("calculate"));
 
     }
 
     public void calculateFuelConsumption() {
+        totalConsumptionLabel.setText("");
+        if (rb == null) {
+            totalConsumptionLabel.setText("Error loading resources");
+            return;
+        }
+
         try {
-            rb = ResourceBundle.getBundle("texts", locale);
             double distance = Double.parseDouble(distanceTextField.getText());
             double fuel = Double.parseDouble(fuelTextField.getText());
             double fuelConsumption = (fuel / distance) * 100;
@@ -71,31 +69,31 @@ public class HelloController {
     }
 
     public void initialize() {
-        setLanguage("en");
+        setLanguage(new Locale("en", "US"));
         totalConsumptionLabel.setWrapText(true);
     }
 
     public void englishButtonClicked() {
         clear();
-        setLanguage("en");
+        setLanguage(new Locale("en", "US"));
         basePane.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
     }
 
     public void frenchButtonClicked() {
         clear();
-        setLanguage("fr");
+        setLanguage(new Locale("fr", "FR"));
         basePane.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
     }
 
     public void japaneseButtonClicked() {
         clear();
-        setLanguage("ja");
+        setLanguage(new Locale("ja", "JP"));
         basePane.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
     }
 
     public void farsiButtonClicked() {
         clear();
-        setLanguage("fa");
+        setLanguage(new Locale("fa", "IR"));
         basePane.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
 
     }
